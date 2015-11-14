@@ -15,9 +15,21 @@ class TimeTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\DateTime', $result);
     }
 
-    public function testEasterCalculation()
+    /**
+     * @dataProvider easterDateProvider
+     */
+    public function testEasterCalculation($year, $date)
     {
-        $result = $this->time->calculateEaster(2000);
-        $this->assertEquals('23/04', $result->format('d/m'));
+        $result = $this->time->calculateEaster($year);
+        $this->assertEquals($date, $result->format('d/m'));
+    }
+
+    public function easterDateProvider()
+    {
+        return [
+            [2000, '23/04'],
+            [2015, '05/04'],
+            [2010, '04/04'],
+        ];
     }
 }
