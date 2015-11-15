@@ -38,6 +38,32 @@ class TimeTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(48, $result);
     }
 
+    public function testCalculateNumberOfHoursReturnFloat()
+    {
+        $time = new Time(new \DateTime('6 hours 31 minutes 27 seconds'));
+        $result = $time->numberOfHours();
+        $this->assertInternalType('float', $result);
+    }
+
+    /**
+     * @dataProvider numberOfHoursProvider
+     */
+    public function testCalculateNumberOfHours($timeString, $expected)
+    {
+        $time = new Time(new \DateTime($timeString));
+        $result = $time->numberOfHours();
+        $this->assertEquals($expected, $result, '', 0.00002);
+    }
+    
+    public function numberOfHoursProvider()
+    {
+        return [
+            ['18:31:27', 18.52417],
+            ['04:31:27', 4.52417],
+            ['11:11:11', 11.18638],
+        ];
+    }
+
     public function easterDateProvider()
     {
         return [

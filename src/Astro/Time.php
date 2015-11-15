@@ -56,4 +56,19 @@ class Time
         $days = $this->date->diff($date)->days;
         return $days + 1;
     }
+
+    public function numberOfHours()
+    {
+        bcscale(6);
+
+        $seconds = $this->date->format('s');
+        $minutes = $this->date->format('i');
+        $hours = $this->date->format('G');
+
+        $numberOfSeconds = bcdiv($seconds, '60.0');
+        $numberOfMinutes = bcdiv(bcadd($minutes, $numberOfSeconds), 60);
+        $numberOfHours = bcadd($hours, $numberOfMinutes);
+
+        return (float) $numberOfHours;
+    }
 }
