@@ -5,12 +5,27 @@ namespace Astro;
 class Time
 {
     /**
+     * @var \DateTime $date
+     */
+    protected $date;
+
+    /**
+     * @parametr \DateTime $date
+     */
+    public function __construct(\DateTime $date)
+    {
+        $this->date = $date;
+    }
+
+    /**
      * Calculates easter for year
      *
      * @var int $year Number of year for easter date
      */
-    public function calculateEaster($year)
+    public function calculateEaster()
     {
+        $year = $this->date->format('Y');
+
         $a = $year % 19;
         $b = (int) ($year / 100);
         $c = $year % 100;
@@ -34,5 +49,11 @@ class Time
         );
 
         return \DateTime::createFromFormat('d-m-Y', $dateString);
+    }
+
+    public function daysTo(\DateTime $date)
+    {
+        $days = $this->date->diff($date)->days;
+        return $days + 1;
     }
 }

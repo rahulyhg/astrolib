@@ -4,14 +4,10 @@ use Astro\Time;
 
 class TimeTest extends \PHPUnit_Framework_TestCase
 {
-    public function setUp()
-    {
-        $this->time = new Time();
-    }
-
     public function testEasterReturnDateTime()
     {
-        $result = $this->time->calculateEaster(2000);
+        $time = new Time(\DateTime::createFromFormat('Y', 2000));
+        $result = $time->calculateEaster();
         $this->assertInstanceOf('\DateTime', $result);
     }
 
@@ -20,8 +16,26 @@ class TimeTest extends \PHPUnit_Framework_TestCase
      */
     public function testEasterCalculation($year, $date)
     {
-        $result = $this->time->calculateEaster($year);
+        $time = new Time(\DateTime::createFromFormat('Y', $year));
+        $result = $time->calculateEaster();
         $this->assertEquals($date, $result->format('d/m'));
+    }
+
+    public function testCalculateDaysFromPeriodReturnsInteger()
+    {
+        $time = new Time(new \DateTime());
+        $result = $time->daysTo(new \DateTime('17 February'));
+        $this->assertInternalType('integer', $result);
+    }
+
+    /**
+     * @dataProvider daysToProvider
+     */
+    public function testCalculateDaysFromPeriod()
+    {
+        $time = new Time(new \DateTime('1 January'));
+        $result = $time->daysTo(new \DateTime('17 February'));
+        $this->assertEquals(48, $result);
     }
 
     public function easterDateProvider()
@@ -30,6 +44,15 @@ class TimeTest extends \PHPUnit_Framework_TestCase
             [2000, '23/04'],
             [2015, '05/04'],
             [2010, '04/04'],
+        ];
+    }
+
+    public function daysToProvider()
+    {
+        return [
+            ['1 January', '17 February', 48],
+            ['1 January 2000', '17 February 2000', 48],
+            ['1 January 1980', '17 February 1985', 1875],
         ];
     }
 }
